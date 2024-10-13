@@ -1,17 +1,15 @@
-part of 'player_bloc.dart';
+import 'package:gamerstagtask/models/player_model.dart';
 
-abstract class PlayerEvent extends Equatable {
-  const PlayerEvent();
-
-  @override
-  List<Object> get props => [];
-}
+abstract class PlayerEvent {}
 
 class AddPlayer extends PlayerEvent {
   final PlayerModel player;
 
-  const AddPlayer(this.player);
+  AddPlayer(this.player);
+}
 
-  @override
-  List<Object> get props => [player];
+class DeletePlayer extends PlayerEvent {
+  final PlayerModel player;
+
+  DeletePlayer(this.player);
 }

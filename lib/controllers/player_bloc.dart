@@ -1,18 +1,23 @@
-import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../models/player_model.dart';
-
-part 'player_event.dart';
-part 'player_state.dart';
+import 'player_event.dart';
+import 'player_state.dart';
 
 class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
-  PlayerBloc() : super(PlayerInitial()) {
-    on<AddPlayer>(_onAddPlayer);
-  }
+  List<PlayerModel> _players = []; // Maintain a list of players
 
-  void _onAddPlayer(AddPlayer event, Emitter<PlayerState> emit) {
-    final updatedPlayers = List<PlayerModel>.from(state.players)
-      ..add(event.player);
-    emit(PlayerAdded(updatedPlayers));
+  PlayerBloc() : super(PlayerInitial()) {
+    // Register event handlers
+    on<AddPlayer>((event, emit) {
+      _players.add(event.player); // Add player to the list
+      emit(PlayerLoadSuccess(
+          players: _players)); // Emit success state with updated players list
+    });
+
+    on<DeletePlayer>((event, emit) {
+      _players.remove(event.player); // Remove player from the list
+      emit(PlayerLoadSuccess(
+          players: _players)); // Emit success state with updated players list
+    });
   }
 }

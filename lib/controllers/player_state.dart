@@ -1,24 +1,21 @@
-part of 'player_bloc.dart';
+import 'package:gamerstagtask/models/player_model.dart';
 
-abstract class PlayerState extends Equatable {
-  const PlayerState();
+abstract class PlayerState {}
 
-  List<PlayerModel> get players => [];
+class PlayerInitial extends PlayerState {}
 
-  @override
-  List<Object> get props => [];
-}
+class PlayerLoadInProgress extends PlayerState {}
 
-class PlayerInitial extends PlayerState {
-  @override
-  List<Object> get props => [];
-}
-
-class PlayerAdded extends PlayerState {
+class PlayerLoadSuccess extends PlayerState {
   final List<PlayerModel> players;
 
-  const PlayerAdded(this.players);
+  PlayerLoadSuccess({required this.players});
+}
 
-  @override
-  List<Object> get props => [players];
+class PlayerLoadFailure extends PlayerState {}
+
+class PlayerAdded extends PlayerState {
+  final PlayerModel player;
+
+  PlayerAdded({required this.player});
 }
