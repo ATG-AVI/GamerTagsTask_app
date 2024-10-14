@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gamerstagtask/controllers/player_event.dart';
 import '../controllers/player_bloc.dart';
+import '../controllers/player_event.dart';
 import '../models/player_model.dart';
 
 class AddPlayerView extends StatelessWidget {
@@ -11,14 +11,17 @@ class AddPlayerView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Add New Player'),
+        backgroundColor: Colors.redAccent,
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Container(
-            width: 400, // Set a fixed width to make it more rectangular
+            width: 400,
             constraints: BoxConstraints(
-              maxHeight:
-                  600, // Set a maximum height to maintain the rectangular shape
+              maxHeight: 600,
             ),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.white, width: 2.0),
@@ -27,7 +30,7 @@ class AddPlayerView extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                CustomBanner(), // Use the CustomBanner widget here
+                CustomBanner(),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -35,103 +38,19 @@ class AddPlayerView extends StatelessWidget {
                     children: [
                       Text(
                         'Enter New Player Name',
-                        style: TextStyle(fontSize: 20), // Increased font size
+                        style: TextStyle(fontSize: 20),
                       ),
                       SizedBox(height: 16),
-                      Container(
-                        width: 300, // Decreased width
-                        margin: const EdgeInsets.symmetric(
-                            horizontal:
-                                16.0), // Add margin to increase horizontal space
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.grey.withOpacity(0.5),
-                              Colors.grey.withOpacity(0.5)
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                          border: Border.all(color: Colors.black, width: 2.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.white
-                                  .withOpacity(0.3), // Reduced opacity
-                              spreadRadius: -5, // Reduced spread radius
-                              blurRadius: 15, // Reduced blur radius
-                              offset: Offset(0, 0),
-                            ),
-                          ],
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        height: 60, // Adjust height as needed
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: TextField(
-                            controller: nameController,
-                            decoration: InputDecoration(
-                              labelText: 'Enter Player Name',
-                              labelStyle: TextStyle(
-                                  fontWeight: FontWeight
-                                      .w100), // Make the text very thin
-                              border: InputBorder.none,
-                              filled: true,
-                              fillColor: Colors
-                                  .transparent, // Make the TextField background transparent
-                              counterText: '', // Remove the character counter
-                            ),
-                            maxLength: 30,
-                          ),
-                        ),
+                      CustomTextField(
+                        controller: nameController,
+                        labelText: 'Enter Player Name',
+                        maxLength: 30,
                       ),
                       SizedBox(height: 16),
-                      Container(
-                        width: 300, // Decreased width
-                        margin: const EdgeInsets.symmetric(
-                            horizontal:
-                                16.0), // Add margin to increase horizontal space
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.red.withOpacity(0.5),
-                              Colors.redAccent.withOpacity(0.5)
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                          border: Border.all(color: Colors.black, width: 2.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.white
-                                  .withOpacity(0.3), // Reduced opacity
-                              spreadRadius: -5, // Reduced spread radius
-                              blurRadius: 15, // Reduced blur radius
-                              offset: Offset(0, 0),
-                            ),
-                          ],
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        height: 60, // Adjust height as needed
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: TextField(
-                            controller: gamersTagController,
-                            decoration: InputDecoration(
-                              labelText: 'Enter Gamers Tag ID',
-                              labelStyle: TextStyle(
-                                  fontWeight: FontWeight
-                                      .w100), // Make the text very thin
-                              border: InputBorder.none,
-                              filled: true,
-                              fillColor: Colors
-                                  .transparent, // Make the TextField background transparent
-                              counterText: '', // Remove the character counter
-                            ),
-                            maxLength: 10,
-                          ),
-                        ),
+                      CustomTextField(
+                        controller: gamersTagController,
+                        labelText: 'Enter Gamers Tag ID',
+                        maxLength: 10,
                       ),
                       SizedBox(height: 16),
                       Row(
@@ -146,7 +65,7 @@ class AddPlayerView extends StatelessWidget {
                             onPressed: () {
                               if (nameController.text.isNotEmpty &&
                                   gamersTagController.text.isNotEmpty) {
-                                final player = PlayerModel(
+                                final player = Player(
                                   name: nameController.text,
                                   gamersTag: gamersTagController.text,
                                   avatarUrl: 'https://via.placeholder.com/150',
@@ -156,11 +75,10 @@ class AddPlayerView extends StatelessWidget {
                                     .add(AddPlayer(player));
                                 Navigator.pop(context);
                               } else {
-                                // Show an error message if fields are empty
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                      content:
-                                          Text('Please fill in all fields')),
+                                    content: Text('Please fill in all fields'),
+                                  ),
                                 );
                               }
                             },
@@ -185,14 +103,10 @@ class CustomBanner extends StatelessWidget {
     return ClipPath(
       clipper: BannerClipper(),
       child: Container(
-        padding: EdgeInsets.symmetric(
-            vertical: 10, horizontal: 50), // Increased horizontal padding
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 50),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Color(0xFFe52d27),
-              Color(0xFFb31217)
-            ], // gradient similar to the image
+            colors: [Color(0xFFe52d27), Color(0xFFb31217)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -201,7 +115,7 @@ class CustomBanner extends StatelessWidget {
           'ADD PLAYER',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 14, // Reduced font size
+            fontSize: 14,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.5,
           ),
@@ -215,11 +129,11 @@ class BannerClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     var path = Path();
-    double cut = 20.0; // the cut at the corners
-    path.moveTo(0, 0); // Top-left
-    path.lineTo(size.width, 0); // Top-right
-    path.lineTo(size.width - cut, size.height); // Bottom-right
-    path.lineTo(cut, size.height); // Bottom-left
+    double cut = 20.0;
+    path.moveTo(0, 0);
+    path.lineTo(size.width, 0);
+    path.lineTo(size.width - cut, size.height);
+    path.lineTo(cut, size.height);
     path.close();
     return path;
   }
@@ -230,7 +144,65 @@ class BannerClipper extends CustomClipper<Path> {
   }
 }
 
-// CustomConfirmButton Widget
+class CustomTextField extends StatelessWidget {
+  final TextEditingController controller;
+  final String labelText;
+  final int maxLength;
+
+  CustomTextField({
+    required this.controller,
+    required this.labelText,
+    required this.maxLength,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 300,
+      margin: const EdgeInsets.symmetric(horizontal: 16.0),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Colors.grey.withOpacity(0.5),
+            Colors.grey.withOpacity(0.5),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(color: Colors.black, width: 2.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.white.withOpacity(0.3),
+            spreadRadius: -5,
+            blurRadius: 15,
+            offset: Offset(0, 0),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      height: 60,
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: TextField(
+          controller: controller,
+          decoration: InputDecoration(
+            labelText: labelText,
+            labelStyle: TextStyle(
+              fontWeight: FontWeight.w100,
+            ),
+            border: InputBorder.none,
+            filled: true,
+            fillColor: Colors.transparent,
+            counterText: '',
+          ),
+          maxLength: maxLength,
+        ),
+      ),
+    );
+  }
+}
+
 class CustomConfirmButton extends StatelessWidget {
   final VoidCallback onPressed;
 
@@ -240,41 +212,39 @@ class CustomConfirmButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Outer black border
         Positioned(
-          top: 4, // Increased space between the red and white outline
-          left: 4, // Increased space between the red and white outline
+          top: 4,
+          left: 4,
           child: ClipPath(
             clipper: CustomButtonClipper(),
             child: Container(
-              width: 100, // Further decreased width
-              height: 30, // Further decreased height
+              width: 100,
+              height: 30,
               decoration: BoxDecoration(
-                color: Colors.black, // Black outline
+                color: Colors.black,
               ),
             ),
           ),
         ),
-        // Main button with white outline
         ClipPath(
           clipper: CustomButtonClipper(),
           child: GestureDetector(
             onTap: onPressed,
             child: Container(
-              width: 100, // Further decreased width
-              height: 30, // Further decreased height
+              width: 100,
+              height: 30,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Color(0xFFe52d27), // Top-left color
-                    Color(0xFFb31217), // Bottom-right color
+                    Color(0xFFe52d27),
+                    Color(0xFFb31217),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 border: Border.all(
-                  color: Colors.white, // White outline
-                  width: 1.0, // Decreased thickness of the white outline
+                  color: Colors.white,
+                  width: 1.0,
                 ),
               ),
               child: Center(
@@ -282,7 +252,7 @@ class CustomConfirmButton extends StatelessWidget {
                   'CONFIRM',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 12, // Further adjusted font size
+                    fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -295,7 +265,6 @@ class CustomConfirmButton extends StatelessWidget {
   }
 }
 
-// CustomCancelButton Widget
 class CustomCancelButton extends StatelessWidget {
   final VoidCallback onPressed;
 
@@ -305,34 +274,32 @@ class CustomCancelButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Outer border shadow
         Positioned(
           top: 2,
           left: 2,
           child: ClipPath(
             clipper: CustomButtonClipperBottomLeft(),
             child: Container(
-              width: 100, // Further decreased width
-              height: 30, // Further decreased height
+              width: 100,
+              height: 30,
               decoration: BoxDecoration(
                 color: Colors.grey.shade800,
               ),
             ),
           ),
         ),
-        // Main button
         ClipPath(
           clipper: CustomButtonClipperBottomLeft(),
           child: GestureDetector(
             onTap: onPressed,
             child: Container(
-              width: 100, // Further decreased width
-              height: 30, // Further decreased height
+              width: 100,
+              height: 30,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Colors.white, // Top-left color
-                    Colors.white, // Bottom-right color
+                    Colors.white,
+                    Colors.white,
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -347,7 +314,7 @@ class CustomCancelButton extends StatelessWidget {
                   'CANCEL',
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 12, // Further adjusted font size
+                    fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -360,19 +327,18 @@ class CustomCancelButton extends StatelessWidget {
   }
 }
 
-// CustomClipper for cutting the bottom-right corner
 class CustomButtonClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     var path = Path();
-    double cutSize = 20.0; // Size of the bottom-right cut
+    double cutSize = 20.0;
 
-    path.moveTo(0, 0); // Top-left corner
-    path.lineTo(size.width, 0); // Top-right corner
-    path.lineTo(size.width, size.height - cutSize); // Right side down
-    path.lineTo(size.width - cutSize, size.height); // Bottom-right corner cut
-    path.lineTo(0, size.height); // Bottom-left corner
-    path.close(); // Complete the path
+    path.moveTo(0, 0);
+    path.lineTo(size.width, 0);
+    path.lineTo(size.width, size.height - cutSize);
+    path.lineTo(size.width - cutSize, size.height);
+    path.lineTo(0, size.height);
+    path.close();
 
     return path;
   }
@@ -383,19 +349,18 @@ class CustomButtonClipper extends CustomClipper<Path> {
   }
 }
 
-// CustomClipper for cutting the bottom-left corner
 class CustomButtonClipperBottomLeft extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     var path = Path();
-    double cutSize = 20.0; // Size of the bottom-left cut
+    double cutSize = 20.0;
 
-    path.moveTo(0, 0); // Top-left corner
-    path.lineTo(size.width, 0); // Top-right corner
-    path.lineTo(size.width, size.height); // Bottom-right corner
-    path.lineTo(cutSize, size.height); // Bottom-left corner cut
-    path.lineTo(0, size.height - cutSize); // Left side up
-    path.close(); // Complete the path
+    path.moveTo(0, 0);
+    path.lineTo(size.width, 0);
+    path.lineTo(size.width, size.height);
+    path.lineTo(cutSize, size.height);
+    path.lineTo(0, size.height - cutSize);
+    path.close();
 
     return path;
   }

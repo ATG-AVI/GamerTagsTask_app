@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 
-final ThemeData darkTheme = ThemeData.dark().copyWith(
-  primaryColor: Colors.black,
+final ThemeData darkTheme = ThemeData(
+  brightness: Brightness.dark,
+  primarySwatch: Colors.red,
+  colorScheme: ColorScheme.dark(
+    secondary: Colors.redAccent,
+  ),
   scaffoldBackgroundColor: Colors.black,
   appBarTheme: AppBarTheme(
-    backgroundColor: Colors.black,
-  ),
-  elevatedButtonTheme: ElevatedButtonThemeData(
-    style: ElevatedButton.styleFrom(
-      backgroundColor: Colors.grey[800], // Button color
+    color: Colors.black,
+    toolbarTextStyle: TextStyle(
+      color: Colors.white,
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+    ),
+    titleTextStyle: TextStyle(
+      color: Colors.white,
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
     ),
   ),
   textTheme: TextTheme(
     bodyLarge: TextStyle(color: Colors.white),
-    bodyMedium: TextStyle(color: Colors.white),
-  ),
-  inputDecorationTheme: InputDecorationTheme(
-    filled: true,
-    fillColor: Colors.grey[800],
-    labelStyle: TextStyle(color: Colors.white),
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8.0),
-      borderSide: BorderSide.none,
-    ),
+    bodyMedium: TextStyle(color: Colors.white70),
   ),
 );

@@ -1,15 +1,15 @@
-import 'package:gamerstagtask/models/player_model.dart';
+import '../models/player_model.dart';
 
 abstract class PlayerEvent {}
 
 class AddPlayer extends PlayerEvent {
-  final PlayerModel player;
+  final Player player;
 
   AddPlayer(this.player);
 }
 
 class DeletePlayer extends PlayerEvent {
-  final PlayerModel player;
+  final Player player;
 
   DeletePlayer(this.player);
 }
