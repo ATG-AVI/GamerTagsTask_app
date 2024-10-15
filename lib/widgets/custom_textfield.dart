@@ -4,11 +4,13 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String labelText;
   final int maxLength;
+  final IconData? icon; // Optional icon field
 
   CustomTextField({
     required this.controller,
     required this.labelText,
     required this.maxLength,
+    this.icon, // Allow optional icon to be passed
   });
 
   @override
@@ -30,6 +32,10 @@ class CustomTextField extends StatelessWidget {
             filled: true,
             fillColor: Colors.grey[800], // Set fill color for better visibility
             counterText: '',
+            prefixIcon: icon != null
+                ? Icon(icon,
+                    color: Colors.white) // Display the icon if provided
+                : null, // No icon if not provided
           ),
           maxLength: maxLength,
           style: TextStyle(color: Colors.white), // Ensure text color is visible

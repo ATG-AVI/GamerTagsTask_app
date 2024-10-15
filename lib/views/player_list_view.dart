@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:math';
 import '../controllers/player_bloc.dart';
 import '../controllers/player_event.dart';
 import '../controllers/player_state.dart';
@@ -12,8 +13,7 @@ class PlayerListView extends StatelessWidget {
       body: Stack(
         children: [
           Container(
-            margin:
-                const EdgeInsets.only(top: 16.0), // Add space above the AppBar
+            margin: const EdgeInsets.only(top: 16.0), // Space above the AppBar
             child: Column(
               children: [
                 AppBar(
@@ -28,54 +28,47 @@ class PlayerListView extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Add a thick white underline limited to the title
+                // White underline for the title
                 Container(
-                  height: 4.0, // Height of the white bar
-                  color: Colors.white, // Color of the bar
-                  width:
-                      100, // Set width to match the text width or adjust as needed
-                  margin: EdgeInsets.only(
-                      top: 4.0), // Space between title and underline
+                  height: 4.0,
+                  color: Colors.white,
+                  width: 100,
+                  margin: EdgeInsets.only(top: 2.0),
                 ),
-                // Add a gradient red bar below the white underline with more space above
+                // Gradient red bar
                 Container(
-                  height: 4.0, // Height of the gradient line
-                  width: double.infinity, // Full width of the screen
-                  margin: EdgeInsets.only(
-                      top: 16.0), // Increased space between white and red line
+                  height: 4.0,
+                  width: double.infinity,
+                  margin: EdgeInsets.only(top: 8.0),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Colors.redAccent, Colors.red], // Gradient colors
+                      colors: [Colors.redAccent, Colors.red],
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                     ),
                   ),
                 ),
-                // Box similar to "SHUFFLE THE MATCHES"
+                // "SHUFFLE THE MATCHES" section
                 Align(
-                  alignment:
-                      Alignment.centerLeft, // Align container to the left
+                  alignment: Alignment.centerLeft,
                   child: Container(
-                    width: 250, // Reduced width of the container
-                    margin: EdgeInsets.symmetric(
-                        vertical: 16.0,
-                        horizontal: 16.0), // Add space on the right
-                    padding: EdgeInsets.all(8.0), // Reduced padding
+                    width: 250,
+                    margin:
+                        EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+                    padding: EdgeInsets.all(8.0),
                     decoration: BoxDecoration(
-                      color: Colors.black, // Background color of the box
-                      borderRadius: BorderRadius.zero, // No border radius
-                      border: Border.all(
-                          color: Colors.grey, width: 2.0), // Grey border
+                      color: Colors.black,
+                      borderRadius: BorderRadius.zero,
+                      border:
+                          Border.all(color: Colors.grey), // Added grey border
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.check, color: Colors.white), // Tick icon
-                            SizedBox(
-                                width:
-                                    4.0), // Reduced space between icon and text
+                            Icon(Icons.check, color: Colors.white),
+                            SizedBox(width: 4.0),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -84,11 +77,10 @@ class PlayerListView extends StatelessWidget {
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 12, // Further reduced text size
+                                    fontSize: 12,
                                   ),
                                 ),
-                                SizedBox(
-                                    height: 2.0), // Reduced space between texts
+                                SizedBox(height: 2.0),
                                 RichText(
                                   text: TextSpan(
                                     children: [
@@ -96,17 +88,14 @@ class PlayerListView extends StatelessWidget {
                                         text: 'Last shuffled: ',
                                         style: TextStyle(
                                           color: Colors.white70,
-                                          fontSize:
-                                              10, // Further reduced text size
+                                          fontSize: 10,
                                         ),
                                       ),
                                       TextSpan(
-                                        text:
-                                            '4m ago', // This part will be green
+                                        text: '4m ago',
                                         style: TextStyle(
-                                          color: Colors
-                                              .green, // Changed color to green
-                                          fontSize: 10, // Same font size
+                                          color: Colors.green,
+                                          fontSize: 10,
                                         ),
                                       ),
                                     ],
@@ -121,116 +110,168 @@ class PlayerListView extends StatelessWidget {
                             // Handle button press
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red, // Button color
-                            foregroundColor: Colors.white, // Button text color
-                            minimumSize: Size(40,
-                                20), // Reduced size of the button (width, height)
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
+                            minimumSize: Size(40, 20),
                             padding: EdgeInsets.symmetric(
-                                horizontal: 8.0,
-                                vertical: 4.0), // Reduced padding
+                                horizontal: 8.0, vertical: 4.0),
                             shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.zero, // No border radius
+                              borderRadius: BorderRadius.zero,
                             ),
                           ),
                           child: Text(
                             'SHUFFLE',
-                            style: TextStyle(
-                                fontSize:
-                                    10), // Further reduced button text size
+                            style: TextStyle(fontSize: 10),
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
+
+                // PageView for Quarter Finals, Semi Finals, and Finals
                 Expanded(
-                  // Use Expanded to make the body take up the remaining space
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: BlocBuilder<PlayerBloc, PlayerState>(
-                      builder: (context, state) {
-                        if (state is PlayerLoadInProgress) {
-                          return Center(child: CircularProgressIndicator());
-                        } else if (state is PlayerLoadSuccess) {
-                          final players = state.players;
-                          if (players.isEmpty) {
-                            return Center(child: Text('No players added yet.'));
-                          }
-                          return ListView.builder(
-                            itemCount: players.length,
-                            itemBuilder: (context, index) {
-                              final player = players[index];
-                              return Card(
-                                elevation: 4,
-                                margin: EdgeInsets.symmetric(vertical: 8),
-                                child: ListTile(
-                                  leading: CircleAvatar(
-                                    backgroundImage: player.avatarUrl.isNotEmpty
-                                        ? NetworkImage(player.avatarUrl)
-                                        : AssetImage(
-                                            'assets/player.jpg'), // Ensure this asset is removed if not used
-                                  ),
-                                  title: Text(
-                                    player.name,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                      color: Colors
-                                          .white, // Ensure text color is visible
-                                    ),
-                                  ),
-                                  subtitle: Text(
-                                    player.gamersTag,
-                                    style: TextStyle(
-                                      color: Colors
-                                          .white70, // Ensure text color is visible
-                                    ),
-                                  ),
-                                  trailing: IconButton(
-                                    icon: Icon(Icons.delete,
-                                        color: Colors.redAccent),
-                                    onPressed: () {
-                                      context
-                                          .read<PlayerBloc>()
-                                          .add(DeletePlayer(player));
-                                    },
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        } else if (state is PlayerLoadFailure) {
-                          return Center(child: Text('Failed to load players.'));
-                        }
-                        return Center(child: Text('No players added yet.'));
-                      },
-                    ),
+                  child: PageView(
+                    children: [
+                      buildStagePage('Quarter Finals', 'Match 1'),
+                      buildStagePage('Semi Finals', 'Match 3'),
+                      buildStagePage('Finals', ''),
+                    ],
                   ),
                 ),
               ],
             ),
           ),
           Positioned(
-            right: 16.0, // Position it to the right of the screen
-            top: 150.0, // Adjusted vertical position to move the button
+            right: 16.0,
+            top: 143.0, // Adjusted top value to shift the button above
             child: SizedBox(
-              width: 70, // Increased width of the button
-              height: 70, // Increased height of the button
+              width: 70,
+              height: 70,
               child: FloatingActionButton(
                 onPressed: () {
-                  Navigator.pushNamed(
-                      context, '/addPlayer'); // Navigate to Add Player
+                  Navigator.pushNamed(context, '/addPlayer');
                 },
-                backgroundColor: Colors.red, // Set the background color to red
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius
-                      .zero, // Set border radius to 0 (square shape)
+                backgroundColor: Colors.red,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                child: Icon(Icons.add, size: 40, color: Colors.white),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Helper method to build each stage page with a title and optional subtitle
+  Widget buildStagePage(String title, String subtitle) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 8.0),
+      decoration: BoxDecoration(
+        color: Colors.black,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            if (subtitle.isNotEmpty)
+              Text(
+                subtitle,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
                 ),
-                child: Icon(Icons.add,
-                    size: 40,
-                    color:
-                        Colors.white), // Ensure icon color and size are visible
+              ),
+            SizedBox(height: 16.0), // Space between text and boxes
+            if (title == 'Quarter Finals') ...[
+              buildBoxWithNumber(),
+              SizedBox(height: 16.0), // Space between the two boxes
+              buildBoxWithNumber(),
+              SizedBox(height: 16.0), // Space between the two sections
+              Text(
+                'Match 2',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
+              ),
+              SizedBox(height: 16.0), // Space between text and boxes
+              buildBoxWithNumber(),
+              SizedBox(height: 16.0), // Space between the two boxes
+              buildBoxWithNumber(),
+            ] else if (title == 'Semi Finals') ...[
+              Text(
+                'Match 3',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
+              ),
+              SizedBox(height: 16.0), // Space between text and boxes
+              buildBoxWithNumber(),
+              SizedBox(height: 16.0), // Space between the two boxes
+              buildBoxWithNumber(),
+            ] else if (title == 'Finals') ...[
+              buildBoxWithNumber(),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Helper method to build a box with a CircleAvatar on the left side and a random number on the right side
+  Widget buildBoxWithNumber() {
+    final randomNumber =
+        Random().nextInt(100); // Generate a random number between 0 and 99
+    return Container(
+      height: 50,
+      width: double.infinity,
+      margin: EdgeInsets.only(right: 32.0), // Decrease size from the right
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.white),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 15,
+                backgroundColor:
+                    Colors.grey, // Set a background color instead of an image
+              ),
+              SizedBox(
+                  width: 8.0), // Space between the avatar and the number box
+            ],
+          ),
+          Container(
+            height: 30,
+            width: 30,
+            margin: EdgeInsets.only(
+                right: 8.0), // Margin to separate from the border
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: Center(
+              child: Text(
+                randomNumber.toString(),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                ),
               ),
             ),
           ),
